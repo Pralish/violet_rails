@@ -128,7 +128,7 @@ class ResourceControllerTest < ActionDispatch::IntegrationTest
 
   test 'should allow #create when input type is radio button with multi select' do
     api_namespace = api_namespaces(:array_namespace)
-    api_namespace.api_form.update(properties: { 'name': {'label': 'name', 'placeholder': 'Test', 'input_type': 'radio', 'select_type': 'single' }})
+    api_namespace.api_form.update(properties: { 'name': {'label': 'name', 'placeholder': 'Test', 'input_type': 'radio', 'select_type': 'multi' }})
     payload = {
       data: {
           properties: {
