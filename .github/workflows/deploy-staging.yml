@@ -20,14 +20,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Setup Rbenv
+      run: |
+          echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+          git clone https://github.com/sstephenson/rbenv.git ~/.rbenv && git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+          source ~/.bashrc
     - uses: actions/checkout@v2
     - uses: masa-iwasaki/setup-rbenv@v1
     - uses: ruby/setup-ruby@v1
       with:
         # ruby-version: 3.0.1 # Not needed with a .ruby-version file
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: CHECK RBENV
-      run: rbenv versions
     - uses: miloserdow/capistrano-deploy@master
       with:
         target: staging # Defines the environment that will be used for the deployment
