@@ -7,7 +7,7 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server "restarone-solutions", user: 'ubuntu', roles: %w{app db web}
+server "3.228.40.22", user: 'ubuntu', roles: %w{app db web}
 
 # for local precompile
 set :precompile_env, 'staging'
