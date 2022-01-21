@@ -26,7 +26,7 @@ jobs:
         # ruby-version: 3.0.1 # Not needed with a .ruby-version file
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: CHECK RBENV
-      run: where rbenv
+      run: rbenv versions
     - uses: miloserdow/capistrano-deploy@master
       with:
         target: staging # Defines the environment that will be used for the deployment
