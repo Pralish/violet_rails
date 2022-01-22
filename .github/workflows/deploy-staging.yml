@@ -25,7 +25,6 @@ jobs:
           echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(rbenv init -)"' >> ~/.bashrc
           git clone https://github.com/sstephenson/rbenv.git ~/.rbenv && git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
           source ~/.bashrc
-          rbenv versions
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
