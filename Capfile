@@ -4,9 +4,6 @@ require "capistrano/setup"
 # Include default deployment tasks
 require "capistrano/deploy"
 
-# to compile assets locally
-require 'capistrano/local_precompile'
-
 # to generate the sitemap
 require 'capistrano/sitemap_generator'
 
