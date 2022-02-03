@@ -21,9 +21,15 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - uses: masa-iwasaki/setup-rbenv@v1
     - name: Install Ruby
       run: |
+        sudo apt-get update -y && sudo apt-get upgrade -y
+        sudo apt install curl -y 
+        sudo apt install nodejs -y && sudo apt install npm -y
+        sudo apt-get install htop imagemagick build-essential zlib1g-dev openssl libreadline6-dev git-core zlib1g libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf automake libtool bison libgecode-dev -y && sudo apt-get install libpq-dev -y
+        echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+        git clone https://github.com/sstephenson/rbenv.git ~/.rbenv && git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+        source ~/.bashrc
         eval "$(rbenv init -)"
         rbenv install -s `cat .ruby-version` # or specify the version you want
     - name: Run bundler
