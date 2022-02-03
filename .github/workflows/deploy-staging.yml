@@ -32,6 +32,7 @@ jobs:
         source $GITHUB_PATH
         eval "$(rbenv init -)"
         rbenv install -s `cat .ruby-version` # or specify the version you want
+        gem install bundler:2.1.4
         bundle install --path vendor/bundle
     - uses: miloserdow/capistrano-deploy@master
       with:
