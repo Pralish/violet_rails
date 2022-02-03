@@ -21,6 +21,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.6 # Not needed with a .ruby-version file but it's good to be clear here
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install Ruby
         run: |
           sudo git clone https://github.com/rbenv/rbenv.git /home/runner/.rbenv
