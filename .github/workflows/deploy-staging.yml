@@ -1,7 +1,7 @@
 name: Deploy with Capistrano
 on:
   push:
-    branches: [ rc, master, main ]
+    branches: [ test-staging, master, main ]
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
             echo "::set-output name=env_name:production"
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo "::set-output name=env_name:production"
-          elif [ "${{ github.ref }}" = "refs/heads/rc" ]; then
+          elif [ "${{ github.ref }}" = "refs/heads/test-staging" ]; then
             echo "::set-output name=env_name::staging"
           fi         
     outputs:
