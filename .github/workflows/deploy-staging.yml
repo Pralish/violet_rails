@@ -1,35 +1,32 @@
-# This is a basic workflow to help you get started with Actions
 name: Deploy with Capistrano
-
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ test-staging ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [ test-staging, master ]
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  deploy:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  build:
+    runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Some check on branch
+        id: branch_check
+        run: |
+          echo "Running on branch ${{ github.ref }}"
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+            echo "::set-output name=env_name:production"
+          elif [ "${{ github.ref }}" = "refs/heads/test-staging" ]; then
+            echo "::set-output name=env_name::staging"
+          fi         
+    outputs:
+      env_name: ${{ steps.branch_check.outputs.env_name }}
+
+  deploy:
+    needs: build 
+    runs-on: ubuntu-18.04
+    environment:
+      name: ${{ needs.build.outputs.env_name }}
+    steps:
       - uses: actions/checkout@v2
-      - name: Cache RBENV_ROOT
-        uses: actions/cache@v1
-        id: cache_rbenv
-        with:
-          path: /home/runner/.rbenv
-          key: ${{ runner.os }}-rbenv-${{ hashFiles('**/.ruby-version') }}
-          restore-keys: |
-            {{ runner.os }}-rbenv-
-            
       - name: Install Rbenv
         run: |
           sudo git clone https://github.com/rbenv/rbenv.git /home/runner/.rbenv
@@ -41,7 +38,6 @@ jobs:
           source $GITHUB_PATH
           eval "$(rbenv init -)"
           rbenv install -s `cat .ruby-version`
-  
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -54,9 +50,9 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_HOST }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - uses: miloserdow/capistrano-deploy@master
         with:
-          target: staging # Defines the environment that will be used for the deployment
-          enc_rsa_key_val: ${{ secrets.STAGING_RSA_ENC_KEY_VAL }}
-          deploy_key: ${{ secrets.DEPLOY_STAGING_ENC_KEY }} # Name of the variable configured in Settings/Secrets of your github project
+          target: ${{ needs.build.outputs.env_name }} # Defines the environment that will be used for the deployment
+          enc_rsa_key_val: ${{ secrets.ENC_RSA_KEY_VAL }}
+          deploy_key: ${{ secrets.DEPLOY_ENC_KEY }} # Name of the variable configured in Settings/Secrets of your github project
