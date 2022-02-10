@@ -21,13 +21,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      - name: Install Ruby
+      - name: Install Rbenv
         run: |
           sudo git clone https://github.com/rbenv/rbenv.git /home/runner/.rbenv
           sudo apt-get update
@@ -37,10 +31,12 @@ jobs:
           echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $GITHUB_PATH
           source $GITHUB_PATH
           eval "$(rbenv init -)"
-          rbenv install -s `cat .ruby-version` # or specify the version you want
-          gem install bundler:2.1.4
-          bundle install --path vendor/bundle
-        uses: miloserdow/capistrano-deploy@master
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.6 # Not needed with a .ruby-version file but it's good to be clear here
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - uses: miloserdow/capistrano-deploy@master
         with:
           target: staging # Defines the environment that will be used for the deployment
           enc_rsa_key_val: ${{ secrets.STAGING_RSA_ENC_KEY_VAL }}
