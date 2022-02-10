@@ -45,8 +45,6 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_HOST }}
-      - name: SSH add
-        run: ssh-add
       - uses: miloserdow/capistrano-deploy@master
         with:
           target: staging # Defines the environment that will be used for the deployment
