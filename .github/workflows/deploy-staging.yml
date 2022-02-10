@@ -1,7 +1,7 @@
 name: Deploy with Capistrano
 on:
   push:
-    branches: [ test-staging, master ]
+    branches: [ rc, master, main ]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,9 @@ jobs:
           echo "Running on branch ${{ github.ref }}"
           if [ "${{ github.ref }}" = "refs/heads/master" ]; then
             echo "::set-output name=env_name:production"
-          elif [ "${{ github.ref }}" = "refs/heads/test-staging" ]; then
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "::set-output name=env_name:production"
+          elif [ "${{ github.ref }}" = "refs/heads/rc" ]; then
             echo "::set-output name=env_name::staging"
           fi         
     outputs:
@@ -41,8 +43,8 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.6 # Not needed with a .ruby-version file but it's good to be clear here
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          ruby-version: 2.6.6
+          bundler-cache: true 
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
@@ -55,4 +57,4 @@ jobs:
         with:
           target: ${{ needs.build.outputs.env_name }} # Defines the environment that will be used for the deployment
           enc_rsa_key_val: ${{ secrets.ENC_RSA_KEY_VAL }}
-          deploy_key: ${{ secrets.DEPLOY_ENC_KEY }} # Name of the variable configured in Settings/Secrets of your github project
+          deploy_key: ${{ secrets.DEPLOY_ENC_KEY }}
