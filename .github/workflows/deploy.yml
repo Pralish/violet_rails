@@ -23,7 +23,6 @@ jobs:
       env_name: ${{ steps.branch_check.outputs.env_name }}
       
   install_dependencies: 
-    needs: build 
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -47,7 +46,7 @@ jobs:
         with:
           node-version: 14.x
   deploy:
-    needs: install_dependencies 
+    needs: [install_dependencies, build]
     runs-on: ubuntu-18.04
     environment:
       name: ${{ needs.build.outputs.env_name }}
