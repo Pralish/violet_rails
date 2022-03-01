@@ -8,6 +8,7 @@
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 server "3.228.40.22", user: 'ubuntu', roles: %w{app db web}
+server "54.163.245.12", user: 'ubuntu', roles: %w{app db web}
 
 # for local precompile
 set :precompile_env, 'staging'
