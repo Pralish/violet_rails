@@ -19,7 +19,7 @@ jobs:
             echo '::set-output name=env_names:[\"staging\", \"nikean\", \"marked\"]'
           fi      
     outputs:
-      env_name: ${{ steps.branch_check.outputs.env_names }}
+      env_names: ${{ steps.branch_check.outputs.env_names }}
 
   deploy:
     needs: build 
