@@ -16,7 +16,7 @@ jobs:
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo '::set-output name=env_names::[\"production\"]'
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            echo '::set-output name=env_names::[\"staging\", \"nikean\", \"marked\"]'
+            echo "::set-output name=env_names::${{toJSON(['staging', 'nikean', 'marked'])}}""
           fi 
       - name: 'show'
         run: echo ${{ steps.branch_check.outputs.env_names }}    
