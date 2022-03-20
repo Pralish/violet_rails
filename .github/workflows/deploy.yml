@@ -12,9 +12,9 @@ jobs:
         run: |
           echo "Running on branch ${{ github.ref }}"
           if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-            echo '::set-output name=env_names:[\"production\"]'
+            echo '::set-output name=env_names::[\"production\"]'
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo '::set-output name=env_names:[\"production\"]'
+            echo '::set-output name=env_names::[\"production\"]'
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
             echo '::set-output name=env_names::[\"staging\", \"nikean\", \"marked\"]'
           fi      
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        value: ${{fromJson(needs.build.outputs.env_names)}}
+        value: ${{fromJSON(needs.build.outputs.env_names)}}
     environment:
       name: ${{ matrix.value }}
     env:
