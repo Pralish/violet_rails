@@ -28,7 +28,8 @@ jobs:
     needs: build 
     runs-on: ubuntu-18.04
     strategy:
-      matrix: ${{fromJSON(needs.build.outputs.github_envs)}}
+      matrix: 
+        value: ${{needs.build.outputs.github_envs}}
       fail-fast: false
     environment:
       name: ${{ matrix.value }}
