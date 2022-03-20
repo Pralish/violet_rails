@@ -13,15 +13,14 @@ jobs:
           echo "Running on branch ${{ github.ref }}"
           if [ "${{ github.ref }}" = "refs/heads/master" ] || [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo '::set-output name=github_envs::[\"production\"]'
-            echo "::set-output name=deploy_env:production"
+            echo "::set-output name=deploy_env::production"
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
             echo "::set-output name=github_envs::{\"value\":['staging', 'nikean', 'marked']}"
-            echo "::set-output name=deploy_env:staging"
+            echo "::set-output name=deploy_env::staging"
           fi 
     outputs:
       github_envs: ${{ steps.branch_check.outputs.github_envs }}
       deploy_env: ${{ steps.branch_check.outputs.deploy_env }}
-
 
   deploy:
     needs: build 
