@@ -11,23 +11,23 @@ jobs:
         id: branch_check
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-            echo '::set-output name=env_names::[\"production\"]'
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo '::set-output name=env_names::[\"production\"]'
+          if [ "${{ github.ref }}" = "refs/heads/master" ] || [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo '::set-output name=github_envs::[\"production\"]'
+            echo "::set-output name=deploy_env:production"
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            echo "::set-output name=env_names::{\"value\": ${{secrets.CLIENT_ENVS }}}"
+            echo "::set-output name=github_envs::{\"value\":['staging', 'nikean', 'marked']}"
+            echo "::set-output name=deploy_env:staging"
           fi 
-      - name: show
-        run: echo ${{ steps.branch_check.outputs.env_names }}
     outputs:
-      env_names: ${{ steps.branch_check.outputs.env_names }}
+      github_envs: ${{ steps.branch_check.outputs.github_envs }}
+      deploy_env: ${{ steps.branch_check.outputs.deploy_env }}
+
 
   deploy:
     needs: build 
     runs-on: ubuntu-18.04
     strategy:
-      matrix: ${{fromJSON(needs.build.outputs.env_names)}}
+      matrix: ${{fromJSON(needs.build.outputs.github_envs)}}
       fail-fast: false
     environment:
       name: ${{ matrix.value }}
@@ -61,6 +61,6 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - uses: miloserdow/capistrano-deploy@master
         with:
-          target: ${{  matrix.value }} # Defines the environment that will be used for the deployment
+          target: ${{ needs.build.outputs.deploy_env }} # Defines the environment that will be used for the deployment
           enc_rsa_key_val: ${{ secrets.DEPLOY_ID_RSA_ENC }}
           deploy_key: ${{ secrets.DEPLOY_ENC_KEY }}
