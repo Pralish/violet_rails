@@ -16,10 +16,8 @@ jobs:
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo '::set-output name=env_names::[\"production\"]'
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            echo "::set-output name=env_names::{\"value\":['staging', 'nikean', 'marked']}"
+            echo "::set-output name=env_names::{\"value\": ${{secrets.CLIENT_ENVS }}}"
           fi 
-      - name: 'show'
-        run: echo ${{ steps.branch_check.outputs.env_names }}    
     outputs:
       env_names: ${{ steps.branch_check.outputs.env_names }}
 
