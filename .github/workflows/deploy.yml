@@ -15,7 +15,7 @@ jobs:
             echo '::set-output name=github_envs::[\"production\"]'
             echo "::set-output name=deploy_env::production"
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            echo "::set-output name=github_envs::${{toJSON(secrets.CLIENT_ENVS)}}"
+            echo "::set-output name=github_envs::$(toJSON(secrets.CLIENT_ENVS))"
             echo "::set-output name=deploy_env::staging"
           fi 
       - name: shoe
@@ -28,8 +28,7 @@ jobs:
     needs: build 
     runs-on: ubuntu-18.04
     strategy:
-      matrix: 
-        value: ${{needs.build.outputs.github_envs}}
+      matrix: ${{fromJSON(needs.build.outputs.github_envs)}}
       fail-fast: false
     environment:
       name: ${{ matrix.value }}
