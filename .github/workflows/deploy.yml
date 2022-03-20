@@ -16,16 +16,19 @@ jobs:
           elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo "::set-output name=env_name:production"
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            echo "::set-output name=env_name::staging"
-          fi         
+            echo '::set-output name=env_names::[\"staging\", \"nikean\", \"marked\"]'
+          fi      
     outputs:
-      env_name: ${{ steps.branch_check.outputs.env_name }}
+      env_name: ${{ steps.branch_check.outputs.env_names }}
 
   deploy:
     needs: build 
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        value: ${{fromJson(needs.build.outputs.matrix)}}
     environment:
-      name: ${{ needs.build.outputs.env_name }}
+      name: ${{ matrix.value }}
     env:
       SERVER_IP: ${{ secrets.SERVER_IP }}
     steps:
@@ -56,6 +59,6 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - uses: miloserdow/capistrano-deploy@master
         with:
-          target: ${{ needs.build.outputs.env_name }} # Defines the environment that will be used for the deployment
+          target: ${{  matrix.value }} # Defines the environment that will be used for the deployment
           enc_rsa_key_val: ${{ secrets.DEPLOY_ID_RSA_ENC }}
           deploy_key: ${{ secrets.DEPLOY_ENC_KEY }}

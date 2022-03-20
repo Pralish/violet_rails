@@ -1,0 +1,1 @@
+server ENV['SERVER_IP'], user: 'ubuntu', roles: %w{app db web}
