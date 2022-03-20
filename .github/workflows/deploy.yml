@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix: ${{fromJSON(needs.build.outputs.env_names)}}
+      fail-fast: false
     environment:
       name: ${{ matrix.value }}
     env:
