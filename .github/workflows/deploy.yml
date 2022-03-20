@@ -1,7 +1,7 @@
 name: Deploy with Capistrano
 on:
   push:
-    branches: [ rc, master, main ]
+    branches: [ rc, master, main, deploy-test ]
   workflow_dispatch:
 jobs:
   build:
