@@ -15,10 +15,10 @@ jobs:
             echo '::set-output name=github_envs::[\"production\"]'
             echo "::set-output name=deploy_env::production"
           elif [ "${{ github.ref }}" = "refs/heads/deploy-test" ]; then
-            ENV_ARRAY=${{secrets.CLIENT_ENVS}}
+            ENV_ARRAY="${{secrets.CLIENT_ENVS}}""
             ENV_ARRAY="${ENV_ARRAY//, /,}"
             ENV_ARRAY="${ENV_ARRAY//,/\",\"}"
-            echo "::set-output name=github_envs::{\"value\":[\"$ENV_ARRAY\"]}"
+            echo '::set-output name=github_envs::{\"value\":[\"${ENV_ARRAY}\"]}'
             echo "::set-output name=deploy_env::staging"
           fi 
       - name: shoe
