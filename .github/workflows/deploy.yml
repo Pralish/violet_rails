@@ -18,7 +18,7 @@ jobs:
             ENV_ARRAY=${{secrets.CLIENT_ENVS}}
             ENV_ARRAY="${ENV_ARRAY//, /,}"
             ENV_ARRAY="${ENV_ARRAY//,/\",\"}"
-            echo "::set-output name=github_envs::{\"value\":["$ENV_ARRAY"]}"
+            echo "::set-output name=github_envs::{\"value\":[\"$ENV_ARRAY\"]}"
             echo "::set-output name=deploy_env::staging"
           fi 
       - name: shoe
