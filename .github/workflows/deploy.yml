@@ -19,7 +19,7 @@ jobs:
             echo "::set-output name=deploy_env::staging"
           fi 
       - name: shoe
-        run: ${{ steps.branch_check.outputs.github_envs }}
+        run: echo ${{ steps.branch_check.outputs.github_envs }}
     outputs:
       github_envs: ${{ steps.branch_check.outputs.github_envs }}
       deploy_env: ${{ steps.branch_check.outputs.deploy_env }}
